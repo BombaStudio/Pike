@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AI : MonoBehaviour
 {
+    public float health;
     public Transform target;
     public GameObject sword;
     public float minimumDistance;
@@ -22,6 +23,11 @@ public class AI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (health <= 0)
+        {
+            rb.velocity = Vector2.zero;
+        }
         if (Vector2.Distance(transform.position, target.position) > maximumDistance)
         {
             rb.velocity = Vector2.zero;
