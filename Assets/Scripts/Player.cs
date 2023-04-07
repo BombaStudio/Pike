@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    [SerializeField] float mincameradistance,maxcameradistance = 5;
+    [SerializeField] bool camMove;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,9 +52,28 @@ public class Player : MonoBehaviour
         //animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         //animator.SetBool("Grounded", isGrounded);
     }
+    private void LateUpdate()
+    {
+        if (Vector2.Distance(transform.position, Camera.main.transform.position) > maxcameradistance && !camMove) camMove = true;
+        
+        if (camMove)
+        {
+            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z), Time.deltaTime);
+            if (Vector2.Distance(transform.position, Camera.main.transform.position) < mincameradistance)
+            {
+                camMove = false;
+            }
+        }
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(groundCheck.position,checkRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, maxcameradistance);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position,mincameradistance);
     }
 }
