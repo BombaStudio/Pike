@@ -24,7 +24,7 @@ public class AI : MonoBehaviour
     void Update()
     {
 
-        if (health <= 0)
+        if (health <= 0.1f)
         {
             rb.velocity = Vector2.zero;
         }
