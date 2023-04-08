@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
                     {
                         entity = Instantiate(entityPrefab, spawners[Random.Range(0,spawners.Count)].position,Quaternion.identity);;
                         entity.GetComponent<AI>().target = player.transform;
+                        entity.GetComponent<AI>().health = 4;
                         entity.GetComponent<AI>().isAlive = true;
                     }
                     cooldown = Random.Range(min_spawn_cooldown, max_spawn_cooldown);

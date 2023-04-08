@@ -87,9 +87,14 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.up * jumpForce;
         }
 
-        if (attack_wait > 0) attack_wait -= Time.deltaTime;
+        if (attack_wait > 0)
+        {
+            attack_wait -= Time.deltaTime;
+            transform.Find("Sword").gameObject.SetActive(false);
+        }
         else
         {
+            transform.Find("Sword").gameObject.SetActive(true);
             if (Input.GetMouseButtonDown(0))
             {
                 Collider2D attack = Physics2D.OverlapCircle(transform.Find("Sword").position, attackDistance, attackLayer);
