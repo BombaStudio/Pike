@@ -8,6 +8,7 @@ public class AI : MonoBehaviour
     [Header("AI Parameters")]
     public bool isAlive = true;
     [Range(0,10)] public int health = 4;
+    [Range(0, 1)] public int entity_id;
     public float EnemySpeed;
     public float EnemyJumpForce;
     public Transform target;
@@ -28,19 +29,22 @@ public class AI : MonoBehaviour
 
     float lastAttack;
     public Rigidbody2D rb;
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         attack_wait = Random.Range(min_attack_wait, max_attack_wait);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        GetComponent<Animator>().SetBool("live", isAlive);
+        GetComponent<Animator>().SetInteger("id", entity_id);
 
         if (health <= 0) isAlive = false;
 
+        if (entity_id == 0) rb.gravityScale = 1;
+        else rb.gravityScale = 0;
 
         if (isAlive == true)
         {
@@ -60,6 +64,11 @@ public class AI : MonoBehaviour
             }
             else attack();
         }
+    }
+
+    private void LateUpdate()
+    {
+
     }
 
     public void attack()

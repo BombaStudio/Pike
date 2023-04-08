@@ -44,7 +44,9 @@ public class GameController : MonoBehaviour
                 {
                     if (spawners.Count > 0)
                     {
-                        entity = Instantiate(entityPrefab, spawners[Random.Range(0,spawners.Count)].position,Quaternion.identity);;
+                        int s = Random.Range(0, spawners.Count);
+                        entity = Instantiate(entityPrefab, spawners[s].position,Quaternion.identity);
+                        entity.GetComponent<AI>().entity_id = s;
                         entity.GetComponent<AI>().target = player.transform;
                         entity.GetComponent<AI>().health = 4;
                         entity.GetComponent<AI>().isAlive = true;
