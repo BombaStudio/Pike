@@ -6,21 +6,38 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Player Settings")]
     [Range(0, 4)] public int health;
-
     public float moveSpeed = 5f;
     public float jumpForce = 7.5f;
 
-    private Rigidbody2D rb;
-    //private Animator animator;
 
-    private bool isGrounded;
+    [Header("Gravity Settings")]
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    [Header("Camera Settings")]
     [SerializeField] float mincameradistance,maxcameradistance = 5;
     [SerializeField] bool camMove;
+
+    
+
+    [Header("Demage Settings")]
+    [SerializeField] bool demaged;
+    [SerializeField] LayerMask demageLayer;
+
+    [Header("Attack Settings")]
+    [SerializeField] [Range(1,10)] float attackDistance = 3;
+    [SerializeField] [Range(0.1f, 0.5f)] float min_attack_wait;
+    [SerializeField] [Range(0.5f, 1.0f)] float max_attack_wait;
+    [SerializeField] float attack_wait;
+    //[SerializeField] LayerMask attackLayer;
+
+    private bool isGrounded;
+    private Rigidbody2D rb;
+    //private Animator animator;
+    float pain = 0;
 
     private void Start()
     {
@@ -35,10 +52,12 @@ public class Player : MonoBehaviour
         if (moveInput < 0)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
+            transform.localScale = new Vector2(-1, transform.localScale.y);
         }
         else if (moveInput > 0)
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
+            transform.localScale = new Vector2(1, transform.localScale.y);
         }
     }
 
@@ -46,9 +65,29 @@ public class Player : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
+
+        if (pain > 0) pain -= Time.deltaTime;
+        else
+        {
+            if (Physics2D.OverlapCircle(groundCheck.position, checkRadius, demageLayer))
+            {
+                health -= 1;
+                pain = 0.2f;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.velocity = Vector2.up * jumpForce;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Collider2D attack = Physics2D.OverlapCircle(transform.position, attackDistance, attackLayer);
+            //if (attack)
+            //{
+                
+            //}
         }
 
         //animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
@@ -77,5 +116,8 @@ public class Player : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position,mincameradistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 }
