@@ -44,15 +44,19 @@ public class AI : MonoBehaviour
 
         if (isAlive == true)
         {
-            if (Vector2.Distance(transform.position, target.position) > maximumDistance) rb.velocity = Vector2.zero;
+            if (Vector2.Distance(transform.position, target.position) > maximumDistance) rb.velocity = new Vector2(Vector2.zero.x,Physics.gravity.y);
             else if (Vector2.Distance(transform.position, target.position) > minimumDistance)
             {
-                transform.position = Vector2.MoveTowards(transform.position, target.position, EnemySpeed * Time.deltaTime);
+                if (Mathf.Abs(transform.position.y - target.position.y) > 1 && target.position.y < transform.position.y) new Vector2(Vector2.zero.x, Physics.gravity.y);
+                else
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, target.position, EnemySpeed * Time.deltaTime);
 
-                if (transform.position.x < target.position.x) transform.localScale = new Vector2(-1, 1);
-                else if (transform.position.x > target.position.x) transform.localScale = new Vector2(1, 1);
-                //if (transform.position.x < target.position.x) transform.GetChild(0).localPosition = new Vector3(0.57f, 0,0);
-                //else if (transform.position.x > target.position.x) transform.GetChild(0).localPosition = new Vector3(-0.57f, 0,0);
+                    if (transform.position.x < target.position.x) transform.localScale = new Vector2(-1, 1);
+                    else if (transform.position.x > target.position.x) transform.localScale = new Vector2(1, 1);
+                    //if (transform.position.x < target.position.x) transform.GetChild(0).localPosition = new Vector3(0.57f, 0,0);
+                    //else if (transform.position.x > target.position.x) transform.GetChild(0).localPosition = new Vector3(-0.57f, 0,0);
+                }
             }
             else attack();
         }

@@ -29,10 +29,11 @@ public class Player : MonoBehaviour
 
     [Header("Attack Settings")]
     [SerializeField] [Range(1,10)] float attackDistance = 3;
-    [SerializeField] [Range(0.1f, 0.5f)] float min_attack_wait;
-    [SerializeField] [Range(0.5f, 1.0f)] float max_attack_wait;
+    [SerializeField] [Range(0.1f, 0.2f)] float min_attack_wait;
+    [SerializeField] [Range(0.2f, .03f)] float max_attack_wait;
     [SerializeField] float attack_wait;
-    //[SerializeField] LayerMask attackLayer;
+    [SerializeField] Vector3 attack_dir;
+    [SerializeField] LayerMask attackLayer;
 
     private bool isGrounded;
     private Rigidbody2D rb;
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         //animator = GetComponent<Animator>();
+        attack_dir = transform.Find("Sword").transform.localPosition;
     }
 
     private void FixedUpdate()
@@ -51,14 +53,15 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
         if (moveInput < 0)
         {
-            transform.eulerAngles = new Vector3(0, 180, 0);
-            transform.localScale = new Vector2(-1, transform.localScale.y);
+            //transform.eulerAngles = new Vector3(0, 180, 0);
+            attack_dir = new Vector2(-.55f,0);
         }
         else if (moveInput > 0)
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-            transform.localScale = new Vector2(1, transform.localScale.y);
+            //transform.eulerAngles = new Vector3(0, 0, 0);
+            attack_dir = new Vector2(.55f,0);
         }
+        transform.Find("Sword").transform.localPosition = attack_dir;
     }
 
     private void Update()
@@ -81,13 +84,18 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.up * jumpForce;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (attack_wait > 0) attack_wait -= Time.deltaTime;
+        else
         {
-            //Collider2D attack = Physics2D.OverlapCircle(transform.position, attackDistance, attackLayer);
-            //if (attack)
-            //{
-                
-            //}
+            if (Input.GetMouseButtonDown(0))
+            {
+                Collider2D attack = Physics2D.OverlapCircle(transform.Find("Sword").position, attackDistance, attackLayer);
+                if (attack)
+                {
+                    attack.GetComponent<AI>().isAlive = false;
+                    attack_wait = Random.Range(min_attack_wait, max_attack_wait);
+                }
+            }
         }
 
         //animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
@@ -106,6 +114,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -118,6 +127,6 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position,mincameradistance);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackDistance);
+        Gizmos.DrawWireSphere(transform.Find("Sword").transform.position, attackDistance);
     }
 }
