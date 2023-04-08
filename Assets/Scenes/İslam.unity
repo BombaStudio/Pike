@@ -435,15 +435,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAlive: 1
-  health: 100
+  health: 10
+  EnemySpeed: 5
+  EnemyJumpForce: 0
   target: {fileID: 1728690193}
   sword: {fileID: 1701473373}
   minimumDistance: 1.3
   maximumDistance: 7
-  EnemySpeed: 5
-  EnemyJumpForce: 0
   attackCooldown: 2
   attackDuration: 0.2
+  min_attack_wait: 0
+  max_attack_wait: 0
+  attack_wait: 0
   rb: {fileID: 1338054258}
 --- !u!50 &1338054258
 Rigidbody2D:
@@ -1005,6 +1008,14 @@ MonoBehaviour:
   mincameradistance: 0
   maxcameradistance: 5
   camMove: 0
+  demaged: 0
+  demageLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  attackDistance: 3
+  min_attack_wait: 0
+  max_attack_wait: 0
+  attack_wait: 0
 --- !u!1 &2104015960
 GameObject:
   m_ObjectHideFlags: 0
