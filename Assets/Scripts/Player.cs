@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Range(0, 4)] public int health;
+
     public float moveSpeed = 5f;
     public float jumpForce = 7.5f;
 
