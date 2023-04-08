@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
@@ -66,6 +67,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (health <= 0) SceneManager.LoadScene("GameOver");
+
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
 
@@ -92,7 +95,7 @@ public class Player : MonoBehaviour
                 Collider2D attack = Physics2D.OverlapCircle(transform.Find("Sword").position, attackDistance, attackLayer);
                 if (attack)
                 {
-                    attack.GetComponent<AI>().isAlive = false;
+                    attack.GetComponent<AI>().health -= 1;
                     attack_wait = Random.Range(min_attack_wait, max_attack_wait);
                 }
             }

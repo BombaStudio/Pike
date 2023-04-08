@@ -50,6 +50,8 @@ public class GameController : MonoBehaviour
                     }
                     cooldown = Random.Range(min_spawn_cooldown, max_spawn_cooldown);
                 }
+
+                if (Input.GetKeyDown(KeyCode.Escape)) ChangeState("Pause");
                 Time.timeScale = 1;
                 break;
             case "Pause":
@@ -57,6 +59,11 @@ public class GameController : MonoBehaviour
                 break;
             default: break;
         }
+    }
+
+    public void ChangeState(string state)
+    {
+        GameState = state;
     }
 
     private void OnDrawGizmosSelected()

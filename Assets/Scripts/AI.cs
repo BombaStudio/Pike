@@ -7,7 +7,7 @@ public class AI : MonoBehaviour
 {
     [Header("AI Parameters")]
     public bool isAlive = true;
-    [Range(0,10)] public float health;
+    [Range(0,10)] public int health = 4;
     public float EnemySpeed;
     public float EnemyJumpForce;
     public Transform target;
