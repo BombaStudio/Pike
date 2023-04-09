@@ -488,7 +488,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1065439638}
   serializedVersion: 8
   lengthInSec: 0.5
-  simulationSpeed: 1
+  simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -1107,11 +1107,11 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
-    angle: 0.85
+    type: 2
+    angle: 0
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0.67
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -1194,7 +1194,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.3
+      value: 0.13788024
       mode: 0
       spread: 0
       speed:
@@ -5261,6 +5261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAlive: 1
   health: 4
+  entity_id: 0
   EnemySpeed: 5
   EnemyJumpForce: 0
   target: {fileID: 1728690193}
