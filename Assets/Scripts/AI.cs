@@ -27,6 +27,7 @@ public class AI : MonoBehaviour
 
     [SerializeField] float attack_wait;
 
+
     float lastAttack;
     public Rigidbody2D rb;
 
@@ -43,26 +44,48 @@ public class AI : MonoBehaviour
 
         if (health <= 0) isAlive = false;
 
-        if (entity_id == 0) rb.gravityScale = 1;
-        else rb.gravityScale = 0;
+
 
         if (isAlive == true)
         {
-            if (Vector2.Distance(transform.position, target.position) > maximumDistance) rb.velocity = new Vector2(Vector2.zero.x,Physics.gravity.y);
-            else if (Vector2.Distance(transform.position, target.position) > minimumDistance)
+            if (entity_id == 0)
             {
-                if (Mathf.Abs(transform.position.y - target.position.y) > 1 && target.position.y < transform.position.y) new Vector2(Vector2.zero.x, Physics.gravity.y);
-                else
+                if (Vector2.Distance(transform.position, target.position) > maximumDistance) rb.velocity = new Vector2(Vector2.zero.x, Physics.gravity.y);
+                else if (Vector2.Distance(transform.position, target.position) > minimumDistance)
                 {
+                    if (Mathf.Abs(transform.position.y - target.position.y) > 1 && target.position.y < transform.position.y) new Vector2(Vector2.zero.x, Physics.gravity.y);
+                    else
+                    {
+                        transform.position = Vector2.MoveTowards(transform.position, target.position, EnemySpeed * Time.deltaTime);
+
+                        if (transform.position.x < target.position.x) transform.localScale = new Vector2(-1, 1);
+                        else if (transform.position.x > target.position.x) transform.localScale = new Vector2(1, 1);
+                        //if (transform.position.x < target.position.x) transform.GetChild(0).localPosition = new Vector3(0.57f, 0,0);
+                        //else if (transform.position.x > target.position.x) transform.GetChild(0).localPosition = new Vector3(-0.57f, 0,0);
+                    }
+                }
+                else attack();
+            }
+            else if (entity_id == 1)
+            {
+                if (Vector2.Distance(transform.position, target.position) > maximumDistance) rb.velocity = Vector2.zero;
+                else if (Vector2.Distance(transform.position, target.position) > minimumDistance)
+                {
+                    //EnemySpeed = 5;
                     transform.position = Vector2.MoveTowards(transform.position, target.position, EnemySpeed * Time.deltaTime);
 
                     if (transform.position.x < target.position.x) transform.localScale = new Vector2(-1, 1);
                     else if (transform.position.x > target.position.x) transform.localScale = new Vector2(1, 1);
-                    //if (transform.position.x < target.position.x) transform.GetChild(0).localPosition = new Vector3(0.57f, 0,0);
-                    //else if (transform.position.x > target.position.x) transform.GetChild(0).localPosition = new Vector3(-0.57f, 0,0);
                 }
+                else attack();
             }
-            else attack();
+
+            if (entity_id == 0) rb.gravityScale = 1;
+            else rb.gravityScale = 0;
+        }
+        else
+        {
+            rb.gravityScale = 1;
         }
     }
 
@@ -81,6 +104,7 @@ public class AI : MonoBehaviour
             lastAttack = Time.time;
             sword.SetActive(true);
             StartCoroutine(DeactivateSword());
+            GetComponent<AudioSource>().Play();
             attack_wait = Random.Range(min_attack_wait, max_attack_wait);
         }
     }

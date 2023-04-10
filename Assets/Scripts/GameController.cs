@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
     [Header("Game Parameters")]
     public string GameState;
     [SerializeField] Player player;
+    [SerializeField] Canvas InGameCanvas;
+    public int score;
 
     [Header("Cooldown Settings")]
     [SerializeField] [Range(1, 5)] float min_spawn_cooldown;
@@ -19,13 +21,17 @@ public class GameController : MonoBehaviour
     [SerializeField] List<Transform> spawners;
 
     GameObject entity;
+
+    Vector3 startPos;
     void Start()
     {
+        startPos = player.transform.position;
         
     }
 
     void Update()
     {
+        InGameCanvas.transform.GetChild(0).GetComponent<Text>().text = score.ToString();
         foreach(Transform t in transform.Find("Canvas").GetComponentInChildren<Transform>())
         {
             if (t.name == GameState) t.gameObject.SetActive(true);
@@ -34,6 +40,9 @@ public class GameController : MonoBehaviour
         switch (GameState)
         {
             case "Game":
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                InGameCanvas.enabled = true;
                 for (int i = 1; i < 5; i++)
                 {
                     if (i > player.health) transform.Find("Canvas").Find("Game").Find("heat" + i.ToString()).GetComponent<Image>().color = Color.black;
@@ -46,7 +55,7 @@ public class GameController : MonoBehaviour
                     {
                         int s = Random.Range(0, spawners.Count);
                         entity = Instantiate(entityPrefab, spawners[s].position,Quaternion.identity);
-                        entity.GetComponent<AI>().entity_id = s;
+                        entity.GetComponent<AI>().entity_id = Random.Range(0,2);
                         entity.GetComponent<AI>().target = player.transform;
                         entity.GetComponent<AI>().health = 4;
                         entity.GetComponent<AI>().isAlive = true;
@@ -58,6 +67,23 @@ public class GameController : MonoBehaviour
                 Time.timeScale = 1;
                 break;
             case "Pause":
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0;
+                break;
+            case "GameOver":
+                InGameCanvas.enabled = false;
+                player.health = 4;
+                score = 0;
+                player.transform.position = startPos;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0;
+                break;
+            case "Start":
+                InGameCanvas.enabled = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 Time.timeScale = 0;
                 break;
             default: break;
@@ -67,6 +93,7 @@ public class GameController : MonoBehaviour
     public void ChangeState(string state)
     {
         GameState = state;
+        GetComponent<AudioSource>().Play();
     }
 
     private void OnDrawGizmosSelected()
